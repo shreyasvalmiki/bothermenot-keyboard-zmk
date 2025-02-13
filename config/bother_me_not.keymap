@@ -1,0 +1,135 @@
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/outputs.h>
+
+&caps_word { continue-list = <UNDERSCORE MINUS DELETE BACKSPACE>; };
+
+&kscan0 {
+    debounce-press-ms = <8>;
+    debounce-release-ms = <8>;
+};
+
+/ {
+    macros {
+        four_space: four_space {
+            compatible = "zmk,behavior-macro";
+            wait-ms = <40>;
+            tap-ms = <40>;
+            #binding-cells = <0>;
+            bindings =
+                <&macro_tap>,
+                <&kp SPACE>,
+                <&macro_tap>,
+                <&kp SPACE>,
+                <&macro_tap>,
+                <&kp SPACE>,
+                <&macro_tap>,
+                <&kp SPACE>;
+        };
+    };
+
+    behaviors {
+        rpi: require_prior_idle {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <200>;
+            quick-tap-ms = <200>;
+            require-prior-idle-ms = <125>;
+            bindings = <&kp>, <&kp>;
+        };
+
+        ht_hp: hold_tap_hold_preferred {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "hold-preferred";
+            tapping-term-ms = <175>;
+            bindings = <&kp>, <&kp>;
+        };
+
+        tdz: tap_dance_z {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <150>;
+            bindings = <&rpi LCTRL Z>, <&kp LC(Z)>;
+        };
+    };
+
+    combos {
+        compatible = "zmk,combos";
+
+        NumToggle {
+            bindings = <&tog 3>;
+            key-positions = <31 32 33>;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            //----------------------------------------------------------------------------------------------------------------
+            //|   =   |   1   |   2   |   3   |   4   |   5   |            |   6   |   7   |   8   |   9   |   0   |   -   |
+            //|CAPWORD|   Q   |   W   |   E   |   R   |   T   |            |   Y   |   U   |   I   |   O   |   P   |   \   |
+            //|  ESC  |   A   |   S   |   D   |   F   |   G   |            |   H   |   J   |   K   |   L   |   ;   |   '   |
+            //|   `   |   Z   |   X   |   C   |   V   |   B   |            |   N   |   M   |   ,   |   .   |   /   | RSHFT |
+            //                                           | RET |          | SPC |
+            //                                              | BSPC |    | TAB |
+
+            bindings = <
+&kp EQUAL            &kp N1        &kp N2  &kp N3  &kp N4  &kp N5                  &kp N6       &kp N7  &kp N8     &kp N9   &kp N0    &kp MINUS
+&caps_word           &kp Q         &kp W   &kp E   &kp R   &kp T                   &kp Y        &kp U   &kp I      &kp O    &kp P     &kp BSLH
+&rpi LCMD ESC        &kp A         &kp S   &kp D   &kp F   &kp G                   &kp H        &kp J   &kp K      &kp L    &kp SEMI  &rpi RCMD SQT
+&ht_hp LSHIFT GRAVE  &rpi LCTRL Z  &kp X   &kp C   &kp V   &lt 2 B                 &kp N        &kp M   &kp COMMA  &kp DOT  &kp FSLH  &kp RSHIFT
+                                        &kp L  &lt 1 ENTER &kp BACKSPACE      &kp TAB &lt 1 SPACE &kp R 
+            >;
+        };
+
+        symbols_layer {
+            //----------------------------------------------------------------------------------------------------------------
+            //|   =   |  F1   |  F2   |  F3   |  F4   |  F5   |            |  F6   |  F7   |  F8   |  F9   |  F10  |  F11  |
+            //|CAPWORD|   Q   |   W   |   E   |   R   |   T   |            |   Y   |   U   |   I   |   O   |   P   |  F12  |
+            //|  ESC  |   A   |   S   |   D   |   F   |   G   |            | LEFT  | DOWN  |   UP  | RIGHT |   ;   |   '   |
+            //|   `   |   Z   |   X   |   C   |   V   |   B   |            |   N   |   M   |   ,   |   .   |   /   | RSHFT |
+            //                                           | RET |          | SPC |
+            //                                              | DEL |    | TAB |
+
+            bindings = <
+&kp EQUAL         &kp F1     &kp F2     &kp F3     &kp F4     &kp F5            &kp F6        &kp F7        &kp F8      &kp F9      &kp F10   &kp F11
+&caps_word        &kp Q      &kp W      &kp E      &kp R      &kp T             &kp Y         &kp U         &kp I       &kp LBKT    &kp RBKT  &kp F12
+&kp ESC           &kp A      &kp S      &kp LC(D)  &kp F      &kp G             &kp LEFT      &kp DOWN      &kp UP      &kp RIGHT   &kp SEMI  &kp C_PP
+&mt LSHIFT GRAVE  &kp LC(Z)  &kp LC(X)  &kp LC(C)  &kp LC(V)  &lt 2 B           &kp C_VOL_DN  &kp C_VOL_UP  &kp C_PREV  &kp C_NEXT  &kp FSLH  &kp RSHIFT
+                                                    &trans &kp RET &kp DEL    &trans &kp SPACE &trans
+            >;
+        };
+
+        ble_layer {
+            //----------------------------------------------------------------------------------------------------------------
+            //|   =   |   1   |   2   |   3   |   4   |   5   |            |   6   |   7   |   8   |   9   |   0   |   -   |
+            //|CAPWORD|   Q   |   W   |   E   |   R   |   T   |            |   Y   |   U   |   I   |   O   |   P   |   \   |
+            //|  ESC  |   A   |   S   |   D   |   F   |   G   |            |   H   |   J   |   K   |   L   |   ;   |   '   |
+            //|   `   |   Z   |   X   |   C   |   V   |   B   |            |   N   |   M   |   ,   |   .   |   /   | RSHFT |
+            //                                           | RET |          | SPC |
+            //                                              | BSPC |    | TAB |
+
+            bindings = <
+&kp EQUAL        &bt BT_SEL 0 &bt BT_SEL 1   &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4        &kp N6     &kp N7       &kp N8         &kp N9     &kp N0   &kp MINUS
+&caps_word       &kp Q        &kp W          &kp E        &kp R        &kp T               &kp Y      &out OUT_TOG &kp I          &kp O      &kp P    &kp BSLH
+&kp ESC          &kp A        &studio_unlock &kp D        &kp F        &kp G               &bt BT_PRV &bt BT_CLR   &bt BT_CLR_ALL &bt BT_NXT &kp SEMI &kp SQT
+&mt LSHIFT GRAVE &kp Z        &kp X          &kp C        &kp V        &kp B               &kp N      &kp M        &kp COMMA      &kp DOT    &kp FSLH &kp RSHIFT
+                                                            &trans &trans &trans       &trans &trans &trans
+            >;
+        };
+
+        Num {
+            bindings = <
+&trans  &trans  &trans  &trans  &trans  &trans          &trans  &kp N7  &kp N8  &kp N9   &kp FSLH   &trans
+&trans  &trans  &trans  &trans  &trans  &trans          &trans  &kp N4  &kp N5  &kp N6   &kp STAR   &trans
+&trans  &trans  &trans  &trans  &trans  &trans          &trans  &kp N1  &kp N2  &kp N3   &kp PLUS   &kp ENTER
+&trans  &trans  &trans  &trans  &trans  &trans          &trans  &kp N0  &trans  &kp DOT  &kp MINUS  &trans
+                            &trans  &trans &trans    &trans &trans &trans
+            >;
+        };
+    };
+};

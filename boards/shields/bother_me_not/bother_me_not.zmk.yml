@@ -1,0 +1,11 @@
+file_format: "1"
+id: bother_me_not
+name: Bother Me Not
+type: shield
+url: https://github.com/powkhenai
+requires: [nice_nano_v2]
+features:
+  - keys
+siblings:
+  - bother_me_not_left
+  - bother_me_not_right

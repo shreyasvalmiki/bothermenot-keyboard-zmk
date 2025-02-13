@@ -1,0 +1,5 @@
+config SHIELD_BOTHER_ME_NOT_LEFT
+    def_bool $(shields_list_contains,bother_me_not_left)
+
+config SHIELD_BOTHER_ME_NOT_RIGHT
+    def_bool $(shields_list_contains,bother_me_not_right)
